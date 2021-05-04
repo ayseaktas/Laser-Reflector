@@ -7,6 +7,10 @@ public class Mirror : MonoBehaviour
 {
     private Node currentNode;
     private Node targetNode;
+
+    private bool attached = false;
+
+    private GameObject attachedMirror = null;
     enum MovingState{
         moving,
         arrived
@@ -45,20 +49,33 @@ public class Mirror : MonoBehaviour
                 movingState = MovingState.arrived;
             }
         }
+
+        if(attachedMirror != null){
+            attachedMirror.transform.position = transform.position;
+        }
     }
 
     void CheckInput(){
-        if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)){
-            ChangePosition(Vector2.up);
+        Vector2 currentPosition = transform.position;
+        if(Input.GetKey(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)){
+            //ChangePosition(Vector2.up);
+            currentPosition.y += 0.1f;
+            transform.position = currentPosition;
         }
-        else if(Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)){
-            ChangePosition(Vector2.down);
+        if(Input.GetKey(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)){
+            //ChangePosition(Vector2.down);
+            currentPosition.y -= 0.1f;
+            transform.position = currentPosition;
         }
-        else if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)){
-            ChangePosition(Vector2.left);
+        if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)){
+            //ChangePosition(Vector2.left);
+            currentPosition.x -= 0.1f;
+            transform.position = currentPosition;
         }
-        else if(Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)){
-            ChangePosition(Vector2.right);
+        if(Input.GetKey(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)){
+            //ChangePosition(Vector2.right);
+            currentPosition.x += 0.1f;
+            transform.position = currentPosition;
         }
     }
 
@@ -85,6 +102,19 @@ public class Mirror : MonoBehaviour
             
         }
         return moveToNode;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        attachedMirror = other.gameObject;
+        attached = true;
+        Debug.Log("Enter");
+    }
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        // attachedMirror = null;
+        attached = false;
+        Debug.Log("Exit");
     }
 
 
