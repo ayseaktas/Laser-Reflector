@@ -10,7 +10,10 @@ public class Mirror : MonoBehaviour
 
     private bool attached = false;
 
+    private bool attachedMirrorCanFollow = false;
+
     private GameObject attachedMirror = null;
+    
     enum MovingState{
         moving,
         arrived
@@ -50,7 +53,7 @@ public class Mirror : MonoBehaviour
             }
         }
 
-        if(attachedMirror != null){
+        if(attachedMirrorCanFollow){
             attachedMirror.transform.position = transform.position;
         }
     }
@@ -76,6 +79,16 @@ public class Mirror : MonoBehaviour
             //ChangePosition(Vector2.right);
             currentPosition.x += 0.1f;
             transform.position = currentPosition;
+        }
+        if(Input.GetKeyDown(KeyCode.X)){
+            if(attached){
+                attachedMirrorCanFollow = !attachedMirrorCanFollow;
+            }
+        }
+        if(Input.GetKey(KeyCode.Z)){
+            if(attachedMirrorCanFollow){                
+                RotateReflectors();
+            }
         }
     }
 
@@ -108,14 +121,20 @@ public class Mirror : MonoBehaviour
     {
         attachedMirror = other.gameObject;
         attached = true;
-        Debug.Log("Enter");
+        // Debug.Log("Enter");
     }
-    private void OnCollisionStay2D(Collision2D other)
+    private void OnCollisionExit2D(Collision2D other)
     {
         // attachedMirror = null;
         attached = false;
-        Debug.Log("Exit");
+        // Debug.Log("Exit");
     }
 
-
+    void RotateReflectors(){
+        float eulerAngleX = attachedMirror.transform.localRotation.eulerAngles.x;
+        float eulerAngleY = attachedMirror.transform.localRotation.eulerAngles.y;
+        float eulerAngleZ = attachedMirror.transform.localRotation.eulerAngles.z;
+        eulerAngleZ += 10.0f;
+        attachedMirror.transform.localRotation = Quaternion.Euler(eulerAngleX, eulerAngleY, eulerAngleZ);
+    }
 }

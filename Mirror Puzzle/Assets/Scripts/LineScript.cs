@@ -19,6 +19,10 @@ public class LineScript : MonoBehaviour
 
     BoxCollider2D endPointCollider;
 
+    BoxCollider2D MirrorCollider;
+
+    int enemyLayer = 8;
+
     UnityEngine.Experimental.Rendering.Universal.Light2D endPointLight;
     UnityEngine.Experimental.Rendering.Universal.Light2D endPointLightShadow;
 
@@ -31,6 +35,9 @@ public class LineScript : MonoBehaviour
 
         endPointLight = GameObject.Find("EndPointLight").GetComponent<UnityEngine.Experimental.Rendering.Universal.Light2D>();
         endPointLightShadow = GameObject.Find("EndPointLightShadow").GetComponent<UnityEngine.Experimental.Rendering.Universal.Light2D>();
+
+        MirrorCollider = GameObject.Find("Mirror").GetComponent<BoxCollider2D>();
+
     }
 
     private void Update()
@@ -60,7 +67,7 @@ public class LineScript : MonoBehaviour
 
         Points.Add(hitData.point);
         currentReflections++;
-        if(hitData.collider != endPointCollider){
+        if(hitData.collider != endPointCollider && hitData.transform.gameObject.layer != enemyLayer){
             Vector2 inDirection = (hitData.point - origin).normalized;
             Vector2 newDirection = Vector2.Reflect(inDirection, hitData.normal);
 
@@ -74,11 +81,13 @@ public class LineScript : MonoBehaviour
                 Points.Add(hitData.point + newDirection * defaultRayDistance);
             }
         }
-        else{
+        else if(hitData.collider == endPointCollider){
             endPointLight.color = Color.green;
             endPointLightShadow.color = Color.green;
             GameObject.Find("LevelManager").GetComponent<LevelManager>().LevelUpProcess();
-
+        }
+        else if(hitData.transform.gameObject.layer == 8){
+            Debug.Log("GAME OVER");
         }
     }
 }
