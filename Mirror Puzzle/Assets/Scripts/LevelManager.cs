@@ -56,7 +56,7 @@ public class LevelManager : MonoBehaviour
             SceneManager.LoadScene("Level2", LoadSceneMode.Single);
         }
         else if(sceneName == "Level2"){
-            SceneManager.LoadScene("Level2", LoadSceneMode.Single);
+            SceneManager.LoadScene("Level3", LoadSceneMode.Single);
         }
         else if(sceneName == "Level3"){
             SceneManager.LoadScene("Win", LoadSceneMode.Single);
